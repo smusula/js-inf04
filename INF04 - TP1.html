@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0080)http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta http-equiv="Content-Language" content="fr">
+<title>INF04 - TP1</title>
+<link rel="stylesheet" type="text/css" media="screen" href="./INF04 - TP1_files/medini.css">
+<link rel="stylesheet" type="text/css" media="print" href="./INF04 - TP1_files/medini-print.css">
+<script type="text/javascript" src="./INF04 - TP1_files/menu.js"></script>
+</head>
+<body>
+<div id="principale">
+<h1>TP 1 : Prise en main des fonctionnalités HTML5</h1>
+<h2 id="objectifs_pedagogiques">Objectifs pédagogiques du TP</h2>
+<ul>
+<li>Se familiariser avec la syntaxe et les nouvelles balises sémantiques HTML5</li>
+<li>Réaliser une Single Page Application (SPA)</li>
+</ul>
+
+<h2 id="ressources">Ressources</h2>
+<ul>
+<li>Une <a href="https://en.wikipedia.org/wiki/Single-page_application">définition générique de la notion et des problématiques liées aux SPA</a></li>
+<li>Un <a href="http://tutorialzine.com/2015/02/single-page-app-without-a-framework/">tutoriel pour débuter avec la notion de SPA</a></li>
+<li>Un <a href="http://liris.cnrs.fr/~lmedini/enseignement/MIF38/CM/CM/CM_Templating.html">cours qui précise la notion de templating côté client</a></li>
+</ul>
+
+<!-- préambule -->
+<h2 id="preambule">Préambule</h2>
+<p>Ce TP durera plusieurs séances. Avant de débuter, vous devez avoir lu (et compris) les différentes ressources listées ci-dessus. Le TP débutera par une séance de questions sur les notions de SPA et de templating côté client.</p>
+
+<p>Créez un dossier INF04/SPA dans un espace accessible par votre serveur dans lequel vous travaillerez.</p>
+
+<!-- structuration -->
+<h2 id="structuration">Séance TP1 : Structuration de l'application</h2>
+<p><strong>Vous allez travailler sur une application de mémorisation des contacts, de type répertoire. Cette application gèrera en JavaScript une liste d'objets "Contact". Elle permettra de renseigner un nouveau contact, d'en afficher ou d'en rechercher un et d'afficher la liste des contacts connus.</strong></p>
+<p>Dans cette question, vous allez définir la structure de votre application. Cette application sera contenue dans une seule page Web, mais sera constituée de plusieurs vues :</p>
+<ul>
+<li>Une page d'accueil, contenant un menu permettant d'accéder aux autres vues</li>
+<li>L'affichage de la liste des contacts déjà enregistrés</li>
+<li>L'affichage des détails d'un contact particulier</li>
+<li>Un formulaire de recherche permettant d'entrer du texte et de lancer une recherche dans la liste</li>
+<li>Un formulaire d'ajout de contact qui permettra d'indiquer les nom, prénom, adresse, adresse mail, numéro de téléphone et date de naissance d'un contact.</li>
+</ul>
+
+<h3>Création des vues</h3>
+<p>Commencez par écrire la structure générale de la page. Déterminez la balise HTML5 qui contiendra les différentes vues et dupliquez-la autant de fois que nécessaire. Choisissez le mécanisme qui permettra de différencier les vues entre elles pour n'en afficher qu'une.</p>
+<p>Toutes les vues autres que la page d'accueil devront posséder un bouton permettant de revenir sur la page d'accueil de l'application.</p>
+
+<h3>Styles d'affichage</h3>
+<p>Définissez deux classes de style CSS : la première permettra d'afficher le contenu d'une vue et la seconde de le cacher.</p>
+
+<h3>Mécanisme de changement de vue</h3>
+<p>Créez une fonction JavaScript qui cache la vue actuellement affichée et affiche celle passée en paramètre. Appelez cette fonction avec les bons paramètres depuis les éléments de la page dédiés à la navigation entre les vues. Testez.</p>
+
+<h3>Mise en place du métier</h3>
+<p>Rendez votre application fonctionnelle :</p>
+<ol>
+<li>Réalisez le formulaire d'ajout d'un contact, avec les éléments <code>input</code> appropriés</li>
+<li>Mettez en place le script correspondant :
+<ol>
+<li>Créez une variable globale dans votre application qui stockera en mémoire la liste de contacts</li>
+<li>Créez un objet JavaScript qui définit la notion de contact. Pour cela, vous pouvez utiliser la notion de prototype en JS (exemple <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/prototype">ici</a>)</li>
+<li>Mettez en place le script qui crée un nouveau contact à l'appui sur le bouton de validation et l'ajoute à la liste</li>
+</ol></li>
+<li>Réalisez les vues (et les cripts correspondants) pour l'affichage de la liste et des détails d'un contact</li>
+<li>Implémentez un moteur de recherche basique (recherche de chaînes) à l'aide d'un formulaire de recherche et de l'affichage de ses résultats</li>
+</ol>
+
+<h3>Ajout de styles</h3>
+<p>Utilisez vos connaissances en CSS pour styler les vues à votre guise. Réalisez deux feuilles de style : l'une pour affichage sur "grand" écran et l'autre sur mobile. Pour l'instant, appliquez l'uine ou l'autre de ces feuilles, par un appel "en dur" dans le code source de la page.</p>
+
+<!-- device API -->
+<h2 id="device_API">Séance TP2 : Device API</h2>
+<p>À suivre....</p>
+
+<!-- Géolocalisation -->
+<h2 id="geolocation">Séance TP3 : Géolocalisation</h2>
+
+</div>
+<div id="license"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/fr/"><img alt="Licence Creative Commons" style="border-width:0" src="./INF04 - TP1_files/88x31.png"></a></div>
+<div id="validation">
+<a href="http://validator.w3.org/check?uri=referer"><img src="./INF04 - TP1_files/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" style="height: 31px; width: 88px"></a>
+</div>
+
+<div id="menu"><h2>Menu</h2><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html#">Haut de la page</a></div><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html#objectifs_pedagogiques">Objectifs pédagogiques du TP</a></div><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html#ressources">Ressources</a></div><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html#preambule">Préambule</a></div><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html#structuration">Séance TP1 : Structuration de l'application</a></div><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html#device_API">Séance TP2 : Device API</a></div><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_HTML5.html#geolocation">Séance TP3 : Géolocalisation</a></div></div><div id="techsmith-snagitchrome-extension"></div></body></html>

@@ -1,0 +1,795 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0079)http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_AJAX.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>TP AJAX</title>
+<link rel="stylesheet" type="text/css" media="screen" href="./TPAJAX_files/medini.css">
+<link rel="stylesheet" type="text/css" media="print" href="./TPAJAX_files/medini-print.css">
+</head>
+
+<body>
+<div id="principale">
+<p style="text-align: center;"><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">Master AI 1ère année - module INF04 : Langages et structures du Web</span></p>
+
+<h1 style="text-align: center;">TP AJAX : conception
+d'une application de messagerie instanée</h1>
+
+<p style="color: red; font-weight: bold;">Attention, ce sujet reprend celui d'une autre matière. Vous n'avez que la seconde partie à réaliser à partir des sources fournies.</p>
+
+<h2>Description de l'application</h2>
+
+L'objectif de ce TP est de concevoir&nbsp;une application de
+messagerie
+instantanée, ou chat, à l'aide des techniques présentées en cours. Cette application permettra à un utilisateur de créer un compte ou de se loguer à l'aide d'un compte existant, puis de discuter avec les autres utilisateurs connectés.<br>
+
+<h2>Objectifs du devoir</h2>
+
+Ce devoir comporte deux parties aux objectifs distincts :<br>
+
+<ul>
+
+  <li>La première partie consiste à
+concevoir une application de chat complète et fonctionnelle
+: créer la
+structure de données, les comptes utilisateurs et
+l'interface web
+permettant l'échange de données avec la base (y
+compris l'envoi et la réception des
+messages). Cette partie est techniquement "classique", et vous pouvez
+la réaliser en vous appuyant sur vos travaux des devoirs
+précédents et
+votre expérience d'utilisateur d'outils&nbsp;de
+messagerie instantanée existants. Vous serez donc moins
+guidés que dans les devoirs
+précédents, et aurez plus de lattitude pour
+organiser les pages et les scripts PHP comme vous l'entendez.
+À la fin de cette partie, il vous est demandé de
+fournir le code source de
+vos différents composants, ainsi qu'un <span style="font-weight: bold;">rapport</span> succinct,
+dont le contenu est indiqué à la fin de cet
+énoncé.</li>
+
+  <li>La seconde partie se focalise sur un point particulier de
+l'application :&nbsp;le processus de
+téléchargement des messages à
+afficher pour un utilisateur donné. Cette partie a
+pour but de vous faire utiliser plus finement le fonctionnement du
+protocole HTTP, et vous permettra d'expérimenter les
+échanges de
+données asynchrones en XML entre le serveur et le client,
+à l'aide des
+technologies AJAX. Pour la réaliser, vous pourrez utiliser
+vos notes prises au dernier regroupement, ainsi que quelques
+références et fonctions
+JavaScript&nbsp;données dans ce <a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/Aide_JavaScript.html">document annexe</a>. Vous
+fournirez le code de cette deuxième partie du devoir
+séparément de celui de la première.</li>
+
+</ul>
+
+<h2>Environnement
+de développement</h2>
+
+Comme pour le devoir
+précédent, vous développerez
+sous WampServer (voir lien d'installation sur la page
+d'accueil du module). Cet outil ne fonctionne que sous Windows. Si vous utilisez un Mac ou un
+autre système d'exploitation, merci d'utiliser les
+mêmes outils, et sous des versions compatibles avec celles
+ci-dessus. Les instructions de la section suivante sont
+spécifiques à WampServer. Si vous utilisez
+d'autres outils, reportez-vous à leurs manuels
+d'instruction pour arriver aux même résultats.
+Vous pouvez me contacter en cas de problème.<br>
+<h2>Partie 1 : conception
+de l'application</h2>
+
+<h3>Création de la structure de données</h3>
+<h4>Modélisation</h4>
+<p>La première des choses à faire est de
+définir la structure de données que vous allez
+utiliser. Pour cela, vous devrez tenir compte des
+éléments suivants :</p>
+
+<ul>
+
+  <li>chaque utilisateur possède un identifiant unique
+("pseudo"), et se logue à l'aide d'un mot de passe,</li>
+
+  <li>chaque message est identifié par son
+numéro
+d'ordre, ne contient que du texte simple, et devra
+être&nbsp;affichés avec le pseudo de son
+auteur,</li>
+
+  <li>une fois la base créée, l'application
+pourra créer des comptes, rajouter des messages, mais aucune
+suppression ne doit être possible.</li>
+
+</ul>
+<h4>Création</h4>
+Dans PHPMyAdmin, vous allez créer :<br>
+
+<ul>
+
+  <li>une base nommée
+"c216_devoir3",</li>
+
+  <li>les tables
+permettant de réaliser la modélisation ci-dessus.</li>
+
+  <li>un utilisateur générique (login = mdp
+= "chat"), que
+vous
+utiliserez
+dans toute votre application pour&nbsp;accéder
+à cette
+base de
+données.</li>
+
+</ul>
+
+<p><span style="font-weight: bold;">
+Attention :</span>
+cet&nbsp;"utilisateur générique", n'est qu'un
+outil technique pour accéder
+facilement à la base depuis l'application. Il ne doit pas
+être confondu
+avec les utilisateurs "réels", tels qu'ils sont
+décrits dans le reste
+de cet énoncé, et dont les
+caractéristiques seront enregistrées
+dynamiquement dans la base.</p>
+
+<p><span class="bleu2">Vous indiquerez dans votre
+rapport les requêtes SQL de création des tables.</span>
+</p>
+
+<span style="font-weight: bold;"></span>
+<p><span class="bleu2">Vous indiquerez dans votre
+rapport les droits dont dispose l'utilisateur
+générique sur chaque table.</span>
+</p>
+<h3>Structuration
+générale de l'application</h3>
+
+Vous
+réaliserez un ou plusieurs schéma(s) globa(l/ux)
+de votre application, afin d'articuler les différentes
+pages, en fonction des liens existant entre
+elles. Vous distinguerez sur ce(s) schéma(s) les liens
+hypermédias que l'utilisateur pourra parcourir, les
+redirections automatiques
+réalisées
+par le système, et les inclusions de pages
+côté serveur, dont
+l'utilisateur n'a pas connaissance.<br>
+
+<br>
+
+<span class="bleu2">Vous incluerez ce(s)
+schéma(s)</span><span class="bleu2">dans
+votre rapport.</span><br>
+
+<h3>Fonctionnalités
+à réaliser</h3>
+
+Vous trouverez ci-dessous
+une liste des
+principales tâches à réaliser.<br>
+
+<br>
+
+<span class="bleu2">Vous noterez dans votre rapport les
+principaux
+choix techniques effectués pour ces tâches.</span>
+<h4>Connexion
+à
+l'application</h4>
+
+À&nbsp;partir de
+la&nbsp;page d'accueil de votre application, un utilisateur pourra
+soit se connecter, en utilisant un formulaire web disponible sur cette
+page, soit suivre un lien qui lui permettra de créer un
+compte.<br>
+
+<br>
+
+S'il choisit de se connecter à un compte existant et si
+son login ou son mot de passe sont faux ou ne correspondent pas l'un
+à l'autre, l'application le renvoie sur la même
+page, en y incluant un message d'erreur approprié.<br>
+
+<br>
+
+Lorsque&nbsp;l'utilisateur
+a été authentifié en fonction de ses
+caractéristiques dans la base, il est reconnu par le
+système qui le
+redirige alors vers&nbsp;l'interface de discussion.<br>
+
+<h4>Création d'un compte utilisateur</h4>
+
+Dans le cas où il utilise
+directement le formulaire de connexion, il renseigne&nbsp;deux
+champs (pseudo et mot de passe) et valide sa requête
+à l'aide d'un bouton approprié. Le mot de passe
+est entré deux fois, afin de
+vérifier qu'il n'y a pas eu d'erreur de frappe.<br>
+
+<br>
+
+Si
+le pseudo existe déjà, ou si les deux mots de
+passe entrés ne sont pas identiques,
+l'application le renvoie sur la même page, en y incluant un
+message d'erreur approprié.<br>
+
+<br>
+
+Dans le cas contraire, il est enregistré dans la base et
+considéré comme authentifié par le
+système, qui le
+redirige alors vers&nbsp;l'interface de discussion. <br>
+
+<h4>Interface de discussion</h4>
+
+Il s'agit ici de réaliser la
+fonctionnalité de chat proprement dite, qui permet d'assurer
+le fonctionnement "normal" de l'application. L'interface&nbsp;est
+celle que voit un utilisateur connecté à un
+groupe de discussion. Elle propose les fonctionnalités
+suivantes :<br>
+
+<ul>
+
+  <li>affichage des messages : la totalité des
+messages
+échangés sont affichés, avec leurs
+auteurs ; pour permettre le chargement des nouveaux messages sans
+renvoi de données de la part de l'utilisateur, cet affichage
+est
+actualisé
+toutes les 5 secondes,</li>
+
+  <li>saisie
+et envoi de nouveaux messages : les messages sont envoyés
+depuis un formulaire basique qui
+provoque l'enregistrement d'un nouveau message et l'actualisation de
+l'affichage de ceux-ci&nbsp;,</li>
+
+  <li>déconnexion :
+l'utilisateur quitte l'application ; il est redirigé vers
+une
+page statique le remerciant de s'être connecté.</li>
+
+</ul>
+
+<span style="font-weight: bold;">Indications :</span>
+<br>
+
+<ul>
+
+  <li> pour l'actualisation automatique de la page, vous pouvez
+par exemple utiliser
+l'en-tête HTTP "Refresh" (voir :&nbsp;<a href="http://cyberzoide.developpez.com/html/meta.php3">http://cyberzoide.developpez.com/html/meta.php3</a>),</li>
+
+  <li>pour l'envoi des messages, prévoyez que le
+serveur aura
+besoin de savoir de quel utilisateur chaque message provient,</li>
+
+  <li>si vous
+utilisez des cadres, l'envoi d'un formulaire vers un autre cadre de la
+page se fait en utilisant l'attribut&nbsp;<span style="font-family: Courier New;">target</span>,</li>
+
+  <li>il est
+conseillé d'utiliser des méthodes HTTP
+différentes
+pour l'envoi d'un nouveau message et pour l'actualisation
+périodique de l'affichage des messages. Cela permet de faire
+différents traitements dans la même page
+dynamique, en
+fonction du type de méthode utilisé,
+après avoir
+testé celle-ci (voir : <a href="http://www.vulgarisation-informatique.com/variables-predefinies.php">http://www.vulgarisation-informatique.com/variables-predefinies.php</a>).
+  </li>
+
+</ul>
+
+L'image ci-dessous présente un exemple d'interface basique.
+Ici,
+les deux parties de l'interface sont réalisées
+dans des
+cadres séparés, mais vous êtes libre de
+choisir une
+autre solution technique.<br>
+
+&nbsp; <br>
+
+<img style="width: 753px; height: 628px;" src="./TPAJAX_files/interface_chat.PNG" alt="Exemple très simple d&#39;interface de discussion">
+<h3>Recommandations de forme</h3>
+
+Bien entendu, n'oubliez pas de faire en sorte que vos documents soient
+en XHTML&nbsp;strict (sauf pour ceux qui définissent des
+frames) et que des feuilles de style CSS leur soient
+associés.<br>
+
+<br>
+Une fois cette première partie du travail
+réalisée, et rédigez le rapport demandé
+à la fin de ce document. Sauvegardez votre travail et
+enregistrez le tout dans un fichier ZIP.
+<h2>Partie 2 : amélioration de l'application</h2>
+
+L'état actuel de votre application est le suivant : toutes
+les 5
+secondes, chaque client interroge le serveur web, lequel va
+à
+son tour interroger le serveur de bases de données, puis
+dynamiquement générer une nouvelle page contenant
+la
+totalité des messages enregistrés, et la renvoyer
+à chaque client <span style="font-style: italic;">via</span>
+le réseau.<br>
+
+<br>
+
+Si le nombre d'utilisateurs est grand et/ou s'il y a de nombreux
+messages enregistrés dans la base, ce fonctionnement peut
+vite
+représenter une charge de travail importante pour les deux
+serveurs, ainsi qu'une consommation inutile de bande passante
+réseau.<br>
+
+<br>
+
+L'objectif de cette partie est donc d'affiner le processus de
+récupération et d'affichage&nbsp;des
+messages échangés par les différents
+utilisateurs.<br>
+
+<h3>Préambule</h3>
+
+Deux possibilités sont à votre disposition pour
+alléger les traitements et les transferts de
+données. Toutes les deux nécessitent que votre
+application connaisse le numéro du dernier message
+enregistré
+dans la base, ainsi que celui du dernier message
+récupéré par chaque utilisateur.<br>
+
+<br>
+
+Modifiez votre application pour rendre ces données
+disponibles dans la page qui affiche les messages.<br>
+
+<br>
+
+<span style="font-weight: bold;">Indication :</span>
+pour le dernier
+message enregistré dans la base, les variables globales de
+niveau application n'existent pas en PHP. Il est donc impossible de
+mémoriser le nombre de messages total et de rendre cette
+valeur
+disponible à la fois pour toutes les pages de l'application
+et
+pour tous les utilisateurs. J'ai obtenu également assez peu
+de
+résultat en utilisant des variables statiques (<a href="http://www.lephpfacile.com/cours/21-la-portee-des-variables">http://www.lephpfacile.com/cours/21-la-portee-des-variables</a>,
+exemple 7). Deux autres possibilités :<br>
+
+<ul>
+
+  <li>créer une fonction qui retrouve ce
+numéro par une requête dans la table contenant les
+messages,</li>
+
+  <li>à chaque ajout d'un nouvel enregistrement,
+stocker le
+numéro du dernier message (par exemple, à l'aide
+de&nbsp;<span style="font-family: Courier New;">LAST_INSERT_ID()</span>),
+et l'enregistrer dans un fichier ou une nouvelle table de la base de
+façon à pouvoir le
+récupérer facilement.</li>
+
+</ul>
+
+<h3>Utilisation des en-têtes HTTP</h3>
+
+Si le numéro du dernier message enregistré dans
+la base
+est égal à celui du dernier message
+envoyé
+à un client, cela signifie qu'aucun message n'est
+arrivé
+depuis la dernière requête du client. Il est donc
+inutile
+de recalculer toute la page.<br>
+
+<br>
+
+Plutôt que de renvoyer une
+réponse HTTP contenant une page complète, il
+suffit de
+renvoyer juste un en-tête HTTP, avec le code de statut
+indiquant
+au client que la page n'a pas été
+modifiée. Voir <a href="http://www710.univ-lyon1.fr/~lmedini/CCI/2006-2007/SICR/Cours_SICR/Transparents_SICR_1.pdf">ici</a>
+pour le code de statut, et <a href="http://nl2.php.net/header">là</a>
+pour la façon de l'utiliser en PHP.<br>
+
+<br>
+
+Modifiez votre application pour que la page ne soit plus
+renvoyée si aucun nouveau message ne doit être
+affiché.<br>
+
+<h3>Chargement asynchrone des derniers messages</h3>
+
+L'étape suivante consiste à ne
+télécharger que les
+messages non encore récupérés par
+chaque client,
+et de les ajouter dynamiquement à la page d'affichage des
+messages. Pour cela, vous allez expérimenter la technologie
+AJAX, qui va vous permettre de récupérer les
+nouveaux messages de façon asynchrone
+(c'est-à-dire sans effacement de la page affichée
+ni interruption de la tâche de l'utilisateur), et d'extraire
+les messages pour les rajouter à
+la suite des messages déjà affichés.<br>
+
+<br>
+
+Techniquement, il s'agit d'utiliser :<br>
+
+<ul>
+
+  <li>une structure de données XML pour
+l'échange de
+données entre le client et le serveur.</li>
+
+  <li>une page XHTML dynamique qui fait appel aux fonctions
+JavaScript ci-dessous,</li>
+
+  <li>des fonctions JavaScript pour le
+téléchargement des messages et leur ajout
+dynamique au
+document XHTML ci-dessus.</li>
+
+</ul>
+
+<h4>Génération des documents XML contenant
+les nouveaux messages </h4>
+
+Voir le <a href="http://www710.univ-lyon1.fr/~lmedini/CCI/2006-2007/XML/">cours
+XML</a>
+pour plus de précisions sur le langage de structuration de
+données XML. La structure de ce document XML sera la
+suivante :<br>
+
+<ul>
+
+  <li>une déclaration XML,</li>
+
+  <li>un élément racine (de nom
+"Messages"), qui contiendra :</li>
+
+  <ul>
+
+    <li>un ou plusieurs élément(s)
+nommé(s) "Message", contenant chacun :</li>
+
+    <ul>
+
+      <li>un élément "Auteur", contenant le
+pseudo de l'auteur,</li>
+
+      <li>un élément "Texte", contenant le
+texte du message.</li>
+
+    </ul>
+
+  </ul>
+
+</ul>
+
+Exemple :<br>
+
+<br>
+
+<div style="border: thin dotted rgb(0, 0, 0); font-family: Courier New; width: 100%;">&lt;?xml
+version="1.0" encoding="ISO-8859-1" ?&gt;<br>
+
+&lt;Messages&gt;<br>
+
+&nbsp;
+&lt;Message&gt;<br>
+
+&nbsp;&nbsp;&nbsp;
+&lt;Auteur&gt;toto&lt;/Auteur&gt;<br>
+
+&nbsp;&nbsp;&nbsp;
+&lt;Texte&gt;Message1&lt;/Texte&gt;<br>
+
+&nbsp;
+&lt;/Message&gt;<br>
+
+&nbsp;
+&lt;Message&gt;<br>
+
+&nbsp;&nbsp;&nbsp;
+&lt;Auteur&gt;titi&lt;/Auteur&gt;<br>
+
+&nbsp;&nbsp;&nbsp;
+&lt;Texte&gt;Message2&lt;/Texte&gt;<br>
+
+&nbsp;
+&lt;/Message&gt;<br>
+
+&nbsp;
+&lt;Message&gt;<br>
+
+&nbsp;&nbsp;&nbsp;
+&lt;Auteur&gt;tata&lt;/Auteur&gt;<br>
+
+&nbsp;&nbsp;&nbsp;
+&lt;Texte&gt;Message3&lt;/Texte&gt;<br>
+
+&nbsp;
+&lt;/Message&gt;<br>
+
+&lt;/Messages&gt;</div>
+
+<br>
+
+<ol>
+
+  <li>Écrivez une nouvelle page PHP qui
+génère un tel
+document à partir des enregistrements contenus
+dans la base. Pour cela, procédez comme pour une page XHTML,
+en tapant les balises XML dans le corps de la page, et en
+insérant le code nécessaire dans des scripts PHP.<br>
+
+    <br>
+
+    <span style="font-weight: bold;">Remarques :</span><br>
+
+    <ul>
+
+      <li>avant d'envoyer des données en XML,
+attention
+à bien
+positionner l'en-tête indiquant que le contenu de
+la&nbsp;réponse est de type "text/xml", pour qu'elle
+puisse être traitée correctement en&nbsp;AJAX
+par les fonctions de la bibliothèque,</li>
+
+      <li>les premiers et derniers caractères d'une
+déclaration XML sont "confusionnants" pour un script PHP ;
+ils
+ne peuvent pas être tapés directement dans le
+corps de la
+page, mais peuvent être insérés dans
+une
+chaîne de caractères, laquelle sera
+rajoutée au
+corps de la page XML à l'aide par exemple d'une instruction <span style="font-family: Courier New;">print</span>,<span style="font-weight: bold;"></span></li>
+
+    </ul>
+
+  </li>
+
+  <li>Modifiez ensuite cette page PHP pour qu'elle renvoie
+uniquement les
+messages dont le numéro est supérieur
+à celui du dernier message déjà
+téléchargé par l'utilisateur.
+Reprenez&nbsp;ce que vous avez fait à la
+question précédente, pour ne pas renvoyer des
+documents
+vides si aucun nouveau message n'a besoin d'être
+récupéré.</li>
+
+  <li>Rajoutez éventuellement dans cette page un
+traitement pour les requêtes POST, qui rajoute un message
+dans la base avant d'actualiser l'affichage (voir plus haut,
+quatrième remarque de la partie "interface de discussion).</li>
+
+</ol>
+
+<h4>Corps du document XHTML et fonctions JavaScript d'inclusion
+dans ce document</h4>
+
+Une bibliothèque de fonctions JavaScript qui
+réalisent l'envoi de la requête et le traitement
+de la réponse en asynchrone est disponible <a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/ajax.js">ici</a>.
+J'ai commenté les différentes fonctions pour que
+vous compreniez ce qu'elles font.
+<ol>
+
+  <li>La première étape est de
+récupérer le code de cette
+bibliothèque de fonctions, et de le faire fonctionner. Pour
+cela, réalisez une page XHTML simple, qui
+possède les caractéristiques suivantes :<br>
+
+    <ul>
+
+      <li>l'élément <span style="font-family: Courier New;">head</span> contient
+deux
+éléments <span style="font-family: Courier New;">script</span> dont
+l'un pointe vers la
+bibliothèque de fonctions JavaScript : <span style="font-family: Courier New;">&lt;script
+type="text/javascript" src="ajax.js"&gt;&lt;/script&gt;</span>,
+et le second contient une fonction JavaScript qui appelle l'une des
+fonctions principales de la bibliothèque
+(voir ci-dessous), et se relance périodiquement pour
+permettre
+l'actualisation des messages (voir document annexe),</li>
+
+      <li>l'élément <span style="font-family: Courier New;">body</span>
+possède un
+attribut <span style="font-family: Courier New;">onload</span>
+qui appelle cette dernière fonction JavaScript au
+chargement de la page : <span style="font-family: Courier New;">&lt;body
+onload="javascript:mafonction(...);"&gt;</span>,</li>
+
+      <li>l'élément dans lequel vous voulez
+que
+les messages s'affichent possède un attribut <span style="font-family: Courier New;">id</span>.</li>
+
+    </ul>
+
+La fonction principale de la bibliothèque AJAX s'appelle <span style="font-family: Courier New;">loadXMLAsynchroneously</span>
+et prend les paramètres suivants :
+    <ul>
+
+      <li>le nom de la méthode HTTP
+utilisée (<span style="font-family: Courier New;">'GET'</span>
+ou <span style="font-family: Courier New;">'POST'</span>),</li>
+
+      <li>l'URL relative de la page PHP qui
+génère le
+document XML,</li>
+
+      <li>les paramètres éventuels de cette
+requête (<span style="font-family: Courier New;">'toto=12&amp;titi=nimportequoi'</span>,
+ou <span style="font-family: Courier New;">null</span>
+sinon),</li>
+
+      <li>la valeur de l'attribut <span style="font-family: Courier New;">id</span> de
+l'élément de la
+page qui doit recevoir les données.</li>
+
+    </ul>
+
+  </li>
+
+  <li>La deuxième étape est d'inclure ce
+code dans
+votre application. Pour cela :<br>
+
+    <ul>
+
+      <li>remplacez la page d'affichage en PHP par cette nouvelle
+page XHTML, et vérifiez-en le fonctionnement,</li>
+
+      <li>modifiez le formulaire d'envoi des données
+pour
+qu'il envoie par POST chaque nouveau message en asynchrone au serveur
+(voir document annexe) ; pour cela, vous pouvez soit :</li>
+
+      <ul>
+
+        <li>traiter ces requêtes dans une page PHP
+à part, en utilisant l'autre
+fonction principale de la bibliothèque, <span style="font-family: Courier New;">sendRequestAsynchroneously</span>,
+qui n'effectue aucun traitement pour la réponse,</li>
+
+        <li>la
+traiter dans la même page PHP que la
+précédente, en utilisant une
+différenciation en fonction des méthodes HTTP
+utilisées (<span style="font-style: italic;">cf.</span>
+partie 3 de la question précédente) ; cela permet
+l'actualisation immédiate de l'affichage des message.</li>
+
+      </ul>
+
+    </ul>
+
+  </li>
+
+  <li>La troisième étape consiste
+à modifier
+la fonction <span style="font-family: Courier New;">traiteXML()</span>
+de la bibliothèque ajax.js,
+qui extrait les contenus du
+document XML récupéré, et
+crée une structure XHTML simple (un div et des span) pour
+les rajouter dans la page XHTML. Il s'agit de modifier le code de cette
+fonction pour que les auteurs et les textes des messages soient
+alignés verticalement, en les plaçant dans les
+cellules d'une table par exemple, et en en améliorant le
+formattage.
+À vous de jouer...</li>
+
+</ol>
+Comme pour la partie précédente, sauvegardez votre
+travail dans un fichier ZIP, en y rajoutant éventuellement un
+fichier texte additionnel (voir plus bas).
+<h2>Modalités
+de rendu du devoir</h2>
+
+<br>
+
+Vous rendrez deux fichiers au format ZIP
+séparés, pour chacune des deux parties du devoir :<br>
+
+<ul>
+
+  <li>Première partie : vous incluerez dans le premier
+fichier le
+code (correctement commenté) de la dernière
+version,&nbsp;un fichier texte contenant les
+différentes requêtes SQL de création
+des tables, ainsi qu'un&nbsp;rapport au format
+PDF de
+quelques pages
+(pas plus d'une dizaine), comprenant :<br>
+
+    <ul>
+
+      <li>une
+description succincte et un schéma
+général de votre application,</li>
+
+      <li>l'ensemble des requêtes de
+création
+des tables</li>
+
+      <li>les réponses aux
+autres questions
+posées en bleu dans cet énoncé,</li>
+
+      <li>les points forts et/ou
+faibles et les problèmes rencontrés pour cette
+application.</li>
+
+    </ul>
+
+  </li>
+
+  <li>Deuxième partie : vous incluerez dans le second
+fichier le
+code (correctement commenté) de la dernière
+version, et éventuellement un fichier texte contenant les
+requêtes SQL de création
+des tables (si vous avez eu besoin d'en créer dans cette
+partie) ou d'autres remarques que vous estimez nécessaires à la compréhension de votre travail.</li>
+
+</ul>
+
+Vous&nbsp;enverrez
+ces deux fichiers par courriel&nbsp;à
+Lionel Médini (lionel.medini _at_ univ-lyon1.fr).
+J'accuserai&nbsp;réception de vos messages pour vous
+signifier que je les aurai bien reçus et que
+les pièces jointes sont ouvrables. Le fait d'avoir
+reçu un accusé de réception
+à votre envoi ne signifie&nbsp;pas&nbsp;que le
+devoir a été corrigé,
+ou qu'aucun des fichiers de votre application ne manque.<br>
+
+<br>
+
+L'objet
+du message devra impérativement contenir les mots "e-Miage",
+"C216", "rendu" et "devoir 3", ainsi que vos nom et prénom.<span style="font-weight: bold;"></span>
+</div>
+[an error occurred while processing this directive]
+<script type="text/javascript" src="./TPAJAX_files/menu.js"></script>
+
+<div id="menu"><h2>Menu</h2><div class="lienh2"><a href="http://liris.cnrs.fr/lionel.medini/enseignement/Master_AI/INF04/TP/TP_AJAX.html#">Haut de la page</a></div></div><div id="techsmith-snagitchrome-extension"></div></body></html>
