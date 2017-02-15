@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr" />
+   <!-- Adapté de Christian Wenz JavaScript - l'essentiel du code et des commandes
+        2ème édition, Pearson, 2013, p. 124-126 -->
+ <head>
+   <meta charset="utf-8" />
+   <title>Select en JS</title>
+ </head>
+ <body>
+   <h1>Manipulation de SELECT en JavaScript V1</h1>
+   <form>
+     Langue&nbsp;
+     <select id="listeLangues">
+       <option value="de">allemand</option>
+       <option value="en">anglais</option>
+       <option value="fr">français</option>
+     </select>
+   </form>
+   <script>
+   document.getElementById("listeLangues").addEventListener('change', afficheStatut) ; 
+   
+   function afficheStatut() {
+        var menuCourant = document.getElementById("listeLangues") ; 
+      alert("Parent : " + menuCourant.parentNode.nodeName + ", élément courant : " + menuCourant.nodeName + ", indice du choix : " + menuCourant.selectedIndex + ", libellé : " + menuCourant.options[this.selectedIndex].text + ", valeur retournée : " + menuCourant.value + ")") ; 
+   }
+   </script>
+ </body>
+</html>
